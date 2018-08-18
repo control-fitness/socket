@@ -2,6 +2,10 @@
 
 Server to manage WebSocket in Control Fitness
 
+## Setup
+
+    $ heroku config:set ACCESS_TOKEN="$(openssl rand -hex 32)"
+
 ## Basic HTML
 
     <script src="http://socket.control.fitness/socket.io/socket.io.js"></script>
