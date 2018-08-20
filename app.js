@@ -2,7 +2,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
-var enrouten = require('express-enrouten');
+var is = require('is_js');
 
 const port = process.env.PORT || 8181;
 
@@ -35,8 +35,25 @@ app.use(function(req, res, next) {
 });
 
 /**
- * Controllers
+ * emit
  */
-app.use(enrouten({
-  directory: 'controllers'
-}));
+app.post('/', function (req, res) {
+  if (is.empty(req.body.event) || is.undefined(req.body.event)) {
+    return res.status(400).json({
+      error: {
+        message: 'The event parameter can not be empty.'
+      }
+    });
+  }
+
+  if (!is.json(req.body.data)) {
+    return res.status(400).json({
+      error: {
+        message: 'The data parameter must be an object.'
+      }
+    });
+  }
+
+  req.app.io.sockets.emit(req.body.event, req.body);
+  res.json(req.body);
+});
