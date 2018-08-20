@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Docs - Server to manage WebSocket in Control Fitness</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="http://socket.control.fitness/socket.io/socket.io.js"></script>
+    <script>
+      var request = function() {
+        var accessToken = document.getElementById('accessToken').value;
+        const instance = axios.create({
+          headers: {
+            'authorization': accessToken
+          }
+        });
+
+        instance.post('http://socket.control.fitness', {
+          event: 'example-event',
+          data: {
+            date: new Date()
+          }
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          document.getElementById("message").innerHTML = error;
+        });
+      };
+    </script>
+    <script>
+      var socket = io.connect('http://socket.control.fitness');
+      socket.on('example-event', function (data) {
+        document.getElementById("message").innerHTML = JSON.stringify(data, null, 2);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-6 offset-md-3">
+        <div class="card">
+          <div class="card-body">
+            <form onsubmit="request(); return false;">
+              <div class="form-group">
+                <label for="accessToken">Access token</label>
+                <input id="accessToken" name="accessToken" class="form-control" placeholder="Access token">
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 offset-md-3">
+        <div class="card">
+          <div class="card-body">
+            <div id="message">{}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
