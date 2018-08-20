@@ -2,6 +2,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var is = require('is_js');
 
 const port = process.env.PORT || 8181;
@@ -10,6 +11,11 @@ const port = process.env.PORT || 8181;
 app.io = io;
 
 server.listen(port);
+
+/**
+ * CORS
+ */
+app.use(cors())
 
 /**
  * body-parser
